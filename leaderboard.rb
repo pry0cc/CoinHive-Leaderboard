@@ -51,7 +51,8 @@ Thread.new{
     loop {
         a = agent.get("https://api.coin-hive.com/user/list?secret="+coinhive_secret).body()
         data = JSON.parse(a)
-        api_get = JSON.generate(data["users"].sort {|a,b| a["total"] <=> b["total"]}.reverse)
+        sorted = JSON.generate(data["users"].sort {|a,b| a["total"] <=> b["total"]}.reverse)
+        api_get = sorted
         sleep 1
     }
 }
