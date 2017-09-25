@@ -8,7 +8,7 @@ cp config.json.example config.json
 vim config.json
 ```
 
-Generate a Gemfile.lock
+Generate a Gemfile.lock (optional)
 ```
 docker run --rm -v "$PWD":/usr/src/app -w /usr/src/app ruby:2.1 bundle install
 ```
