@@ -8,6 +8,11 @@ cp config.json.example config.json
 vim config.json
 ```
 
+Generate a Gemfile.lock
+```
+docker run --rm -v "$PWD":/usr/src/app -w /usr/src/app ruby:2.1 bundle install
+```
+
 Build the image and run it
 ```
 docker build -t pry0cc/leaderboard .
