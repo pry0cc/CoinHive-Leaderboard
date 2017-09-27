@@ -58,20 +58,20 @@ Thread.new{
 		}
 
 		data["users"].each do |user|
-			next if user["total"] < 1000000
+			next if user["total"] < badge_boundaries["bronze"]
 
-			puts "Checking " + user["name"]
+			puts "Checking #{user["name"]}"
 
 			user_badges = getBadgeIDs(user["name"], agent)
 
-			badge_boundaries.each do |badge_name, total|
-				can_get? = user["total"] >= total
-				current_badge_id = badge_id_lookup[badge[0]]
+			badge_boundaries.each do |badge_name, threshold|
+				cannot_get = user["total"] < threshold
+				current_badge_id = badge_id_lookup[badge_name]
 
 				# skip if we can't award the badge for either reason.
-				next if !can_get? || user_badges.include? current_badge_id
+				next if cannot_get || user_badges.include? current_badge_id
 
-				puts "Attempting to assign " + user["name"] + " " + badge[0] + " badge"
+				puts "Attempting to assign #{user["name"]} #{badge_name} badge."
 				sleep 10
 
 				# inline paramgs because why not.
@@ -83,7 +83,6 @@ Thread.new{
 					"badge_id"=>current_badge_id,
 					"reason"=>""
 				})
-
 			end
 		end
 	}
