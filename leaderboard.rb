@@ -58,7 +58,9 @@ Thread.new{
 		}
 
 		data["users"].each do |user|
-			next if user["total"] < badge_boundaries["bronze"]
+			if user["total"] < badge_boundaries["bronze"] then
+                next
+            end
 
 			puts "Checking #{user["name"]}"
 
@@ -69,7 +71,10 @@ Thread.new{
 				current_badge_id = badge_id_lookup[badge_name]
 
 				# skip if we can't award the badge for either reason.
-				next if cannot_get || user_badges.include? current_badge_id
+				if cannot_get || (user_badges.include? current_badge_id) then
+                    next
+                end
+
 
 				puts "Attempting to assign #{user["name"]} #{badge_name} badge."
 				sleep 10
