@@ -23,12 +23,23 @@ set :port, 8080
 ip = "0.0.0.0"
 api_get = ""
 data = []
+stats = {}
 
 Thread.new{
 	loop {
 		a = agent.get("https://api.coin-hive.com/user/list?secret="+coinhive_secret).body()
 		data = JSON.parse(a)
 		api_get = JSON.generate(data["users"].sort{|a,b| b["total"] <=> a["total"]})
+		sleep 1
+	}
+}
+
+Thread.new{
+	loop {
+		r = JSON.parse(agent.get("https://api.coin-hive.com/stats/site?secret="+coinhive_secret).body())
+		stats["hashrate"] = r["hashesPerSecond"]
+		stats["total"] = r["hashesTotal"]
+		stats["xmrPaid"] = r["xmrPaid"]
 		sleep 1
 	}
 }
@@ -99,4 +110,8 @@ end
 
 get '/data.json' do
 	return api_get
+end
+
+get '/stats.json' do
+	return JSON.generate(stats)
 end
