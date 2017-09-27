@@ -6,20 +6,17 @@ require 'json'
 
 set :environment, :production
 
+result = File.open("page.html")
 config = JSON.parse(File.open("config.json").read())
 
 discourse_api_key = config["discourse_api_key"]
 coinhive_secret = config["coinhive_secret"]
 
-before do
-  @result = File.open("page.html")
-end
-
 agent = Mechanize.new()
 
 def getBadgeIDs(username, agent)
-    response = JSON.parse(agent.get("https://0x00sec.org/user-badges/" + username + ".json").body())
-    response["badges"].map{|b| b["id"]}
+	response = JSON.parse(agent.get("https://0x00sec.org/user-badges/" + username + ".json").body())
+	response["badges"].map{|b| b["id"]}
 end
 
 set :port, 8080
@@ -38,7 +35,7 @@ Thread.new{
 
 Thread.new{
 	loop {
-		sleep 20
+		sleep 60
 		puts "Doing check.."
 
 		badge_boundaries = {
@@ -59,12 +56,17 @@ Thread.new{
 
 		data["users"].each do |user|
 			if user["total"] < badge_boundaries["bronze"] then
-                next
-            end
+				next
+			end
 
 			puts "Checking #{user["name"]}"
 
-			user_badges = getBadgeIDs(user["name"], agent)
+			begin
+				user_badges = getBadgeIDs(user["name"], agent)
+			rescue
+				puts "Error! User doesn't have any badges?"
+				user_badges = []
+			end
 
 			badge_boundaries.each do |badge_name, threshold|
 				cannot_get = user["total"] < threshold
@@ -72,12 +74,10 @@ Thread.new{
 
 				# skip if we can't award the badge for either reason.
 				if cannot_get || (user_badges.include? current_badge_id) then
-                    next
-                end
-
+					next
+				end
 
 				puts "Attempting to assign #{user["name"]} #{badge_name} badge."
-				sleep 10
 
 				# inline paramgs because why not.
 				agent.post("https://0x00sec.org/user_badges.json",
@@ -94,7 +94,7 @@ Thread.new{
 }
 
 get '/' do
-	return @result
+	return result
 end
 
 get '/data.json' do
