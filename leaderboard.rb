@@ -27,7 +27,7 @@ stats = {}
 
 Thread.new{
 	loop {
-		a = agent.get("https://api.coin-hive.com/user/list?secret="+coinhive_secret).body()
+		a = agent.get("https://api.coinhive.com/user/list?secret="+coinhive_secret).body()
 		data = JSON.parse(a)
 		api_get = JSON.generate(data["users"].sort{|a,b| b["total"] <=> a["total"]})
 		sleep 1
@@ -36,7 +36,7 @@ Thread.new{
 
 Thread.new{
 	loop {
-		r = JSON.parse(agent.get("https://api.coin-hive.com/stats/site?secret="+coinhive_secret).body())
+		r = JSON.parse(agent.get("https://api.coinhive.com/stats/site?secret="+coinhive_secret).body())
 		stats["hashrate"] = r["hashesPerSecond"]
 		stats["total"] = r["hashesTotal"]
 		stats["xmrPaid"] = r["xmrPaid"]
