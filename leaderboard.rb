@@ -6,7 +6,7 @@ require 'json'
 
 set :environment, :production
 
-result = File.open("page.html")
+result = File.open("page.html").read()
 config = JSON.parse(File.open("config.json").read())
 
 discourse_api_key = config["discourse_api_key"]
