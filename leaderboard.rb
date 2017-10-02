@@ -6,7 +6,7 @@ require 'json'
 
 set :environment, :production
 
-result = File.open("page.html").read()
+result = File.open("page.html")
 config = JSON.parse(File.open("config.json").read())
 
 discourse_api_key = config["discourse_api_key"]
@@ -40,6 +40,7 @@ Thread.new{
 		stats["hashrate"] = r["hashesPerSecond"]
 		stats["total"] = r["hashesTotal"]
 		stats["xmrPaid"] = r["xmrPaid"]
+		stats["xmrPending"] = r["xmrPending"]
 		sleep 1
 	}
 }

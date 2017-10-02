@@ -5,6 +5,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+  <script src="https://npmcdn.com/tether@1.2.4/dist/js/tether.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
   <script>
 	function abbreviateNumber(value) {
     	var newValue = value;
@@ -31,7 +33,7 @@
               url: host,
               dataType: 'json',
               success: function (response) {
-                  var counter = 100;
+                  var counter = 50;
 				  var total = 0;
                   if (response.length < counter) {
                       counter = response.length;
@@ -57,12 +59,19 @@
 			url: host,
 			dataType: 'json',
 			success: function (response) {
+				var percentDone = (response["xmrPending"] / 0.05) * 100
+
 				$("#hashrate").html(response["hashrate"] + "/s");
 				$("#totalhashes").html(response["total"].toLocaleString("en"));
+				$("#xmrPending").html(response["xmrPending"]);
+				$("#xmrPaid").html(response["xmrPaid"]);
+				$("#xmrProgress").css("width", percentDone+"%");
+				$("#xmrProgress").html(parseFloat(Math.round(percentDone * 100) / 100).toFixed(2)+"%");
 			}
 		});
   }, 1000);
   });
+
   </script>
   <style>
   	body {
@@ -86,9 +95,17 @@
     <div class="page-header">
         <h1>0x00sec Mining Leaderboard</h1>
 		<h2> Stats </h2>
-		<p> <strong>Hashrate:</strong> <span id="hashrate">0</span> <strong>Total Hashes:</strong>
-			<span id="totalhashes">0</span>
+		<p> <strong>Hashrate:</strong> <span id="hashrate">0</span>
+			<strong>Total Hashes: </strong><span id="totalhashes">0</span>
+			<strong> XMR Pending: </strong><span id="xmrPending">0</span>
+			<strong> XMR Paid: </strong><span id="xmrPaid">0</span>
 
+		</p>
+		<p>
+			<strong>Progress to Next Payout: </strong>
+			<div class="progress">
+  				<div id="xmrProgress" class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar"></div>
+			</div>
 		</p>
     </div>
 
