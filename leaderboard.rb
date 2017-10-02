@@ -91,7 +91,7 @@ Thread.new{
 
 				puts "Attempting to assign #{user["name"]} #{badge_name} badge."
 
-				# inline paramgs because why not.
+				# inline params because why not.
 				agent.post("https://0x00sec.org/user_badges.json",
 				{
 					"api_key"=> discourse_api_key,

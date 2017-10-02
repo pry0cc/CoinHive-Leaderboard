@@ -59,7 +59,7 @@
 			url: host,
 			dataType: 'json',
 			success: function (response) {
-				var percentDone = (response["xmrPending"] / 0.05) * 100
+				var percentDone = (response["xmrPending"] / 0.5) * 100
 
 				$("#hashrate").html(response["hashrate"] + "/s");
 				$("#totalhashes").html(response["total"].toLocaleString("en"));
